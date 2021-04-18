@@ -29,8 +29,18 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
     StateData.forEach(function (data) {
         data.poverty = +data.poverty;
         data.healthcare = +data.healthcare;
+        data.age = +data.age;
+        data.smokes = +data.smokes;
         console.log(data.poverty);
     });
+
+    var poverty = StateData.map(value => value.poverty);
+    var healthcare = StateData.map(value => value.healthcare);
+    var age = StateData.map(value => value.age);
+    var smokes = StateData.map(value => value.smokes);
+
+    console.log(poverty);
+    console.log(age);
 
     // Step 2: Create scale functions
     // ==============================
