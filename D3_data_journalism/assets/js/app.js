@@ -72,8 +72,8 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
         .data(StateData)
         .enter()
         .append("circle")
-        .attr("cx", d => xLinearScale(d.poverty))
-        .attr("cy", d => yLinearScale(d.healthcare))
+        .attr("cx", d => xLinearScale(d[poverty]))
+        .attr("cy", d => yLinearScale(d[healthcare]))
         .attr("r", "15")
         .attr("fill", "#00334d")
         .classed("circleScatter", true)
@@ -130,6 +130,7 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
         .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("class", "axisText")
         .text("In Poverty (%)");
+        
 }).catch(function (error) {
     console.log(error);
 });
