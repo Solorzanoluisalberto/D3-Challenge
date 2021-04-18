@@ -45,11 +45,11 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-        .domain([8, d3.max(StateData, d => d.poverty)])
+        .domain([8, d3.max(poverty)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(StateData, d => d.healthcare)])
+        .domain([0, d3.max(healthcare)])
         .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -93,29 +93,28 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
         .attr("fill", "black")
         .attr("font-size", "12px")
         .style("font-weight", "bold")
-        .attr("alignment-baseline", "central");
+        .attr("alignment-baseline", "central")
 
-    // Step 6: Initialize tool tip
-    // ==============================
+    // Step 1: Append a div to the body to create tooltips, assign it a class
+    // =======================================================
+    // Step 1: Initialize Tooltip
     var toolTip = d3.tip()
         .attr("class", "tooltip")
-        .offset([20, -20])
+        .offset([80, -60])
         .html(function (d) {
-            return (`${StateData.poverty}<br>Hair length: ${d.healthcare}<br>Hits: ${d.state}`);
+            return (`<strong>${d.poverty}<strong><hr>${d.healthcare}`);
         });
 
-    // Step 7: Create tooltip in the chart
-    // ==============================
+    // Step 2: Create the tooltip in chartGroup.
     chartGroup.call(toolTip);
 
-    // Step 8: Create event listeners to display and hide the tooltip
-    // ==============================
-    textGroup.on("mouseover", function (chartGroup) {
-        toolTip.show(StateData, this);
+    // Step 3: Create "mouseover" event listener to display tooltip
+    textGroup.on("mouseover", function (d) {
+        toolTip.show(d, this);
     })
-    // onmouseout event
-    textGroup.on("mouseout", function () {
-            toolTip.show("display", "none");
+        // Step 4: Create "mouseout" event listener to hide tooltip
+        .on("mouseout", function (d) {
+            toolTip.hide(d);
         });
     
     // Create axes labels
@@ -134,3 +133,4 @@ d3.csv("assets/data/data.csv").then(function (StateData) {
 }).catch(function (error) {
     console.log(error);
 });
+
