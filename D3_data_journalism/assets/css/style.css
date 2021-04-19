@@ -40,13 +40,13 @@ body {
 
 .tooltip {
     position: absolute;
-    width: 90px;
+    width: 95px;
     height: 70px;
     padding: 10px;
     font: 12px sans-serif;
     text-align: center;
     color: white;
-    background: blue;
+    background: #ff6600;
     border: 0;
     border-radius: 10px;
 }
