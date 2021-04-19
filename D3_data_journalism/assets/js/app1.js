@@ -3,6 +3,18 @@ d3.select(window).on("resize", handleResize);
 // When the browser loads, loadChart() is called
 loadChart();
 
+function Updatetextcircle(textcircle, chosenXAxis, xLinearScale) {
+    //alert("voy aca");
+    console.log(textcircle);
+    //borrar.remove();
+    //var luisi = textcircle.map(student => student.text);
+    textcircle.transition()
+        .duration(1000)
+        .attr("x", d => xLinearScale(d[chosenXAxis]));
+    console.log(textcircle)
+    return textcircle
+}
+
 function handleResize() {
     var svgArea = d3.select("svg");
 
@@ -54,7 +66,6 @@ function loadChart() {
 
         return xLinearScale;
     }
-
 
 
     // function used for updating xAxis var upon click on axis label
@@ -169,7 +180,7 @@ function loadChart() {
             .text(d => d.abbr)
             .attr("x", d => xLinearScale(d[chosenXAxis]))
             .attr("y", d => yLinearScale(d.healthcare))
-            .classed("text", true)
+            .classed("text2", true)
             .attr("text-anchor", "middle")
             .attr("fill", "black")
             .attr("font-size", "12px")
@@ -216,6 +227,7 @@ function loadChart() {
         // x axis labels event listener
         labelsGroup.selectAll("text")
             .on("click", function () {
+
                 // get value of selection
                 var value = d3.select(this).attr("value");
                 if (value !== chosenXAxis) {
@@ -237,6 +249,7 @@ function loadChart() {
 
                     // updates tooltips with new info
                     circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+                    textcircle = Updatetextcircle(textcircle, chosenXAxis, xLinearScale)
 
                     // changes classes to change bold text
                     if (chosenXAxis === "poverty") {
