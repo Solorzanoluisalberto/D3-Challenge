@@ -67,7 +67,6 @@ function loadChart() {
         return xLinearScale;
     }
 
-
     // function used for updating xAxis var upon click on axis label
     function renderAxes(newXScale, xAxis) {
         var bottomAxis = d3.axisBottom(newXScale);
@@ -110,7 +109,7 @@ function loadChart() {
             .attr("class", "tooltip")
             .offset([80, -60])
             .html(function (d) {
-                return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+                return (`${d.state}<br>${label} ${d[chosenXAxis]}% <br>health: ${d.healthcare}%`);
             });
 
         circlesGroup.call(toolTip);
