@@ -29,7 +29,6 @@ var chosenYAxis = "healthcare";
 
 function Updatetextcircle(textcircle, chosenAxis, LinearScale, axisX ) {
     //alert("voy aca");
-    console.log(textcircle);
     //borrar.remove();
     switch (axisX) {
         case (false):
@@ -37,16 +36,13 @@ function Updatetextcircle(textcircle, chosenAxis, LinearScale, axisX ) {
             textcircle.transition()
             .duration(1000)
             .attr("y", d => LinearScale(d[chosenAxis]));
-            console.log(textcircle)
             break;
         case (true):
             textcircle.transition()
             .duration(1000)
             .attr("x", d => LinearScale(d[chosenAxis]));
-            console.log(textcircle)
             break;
         default:
-            console.log(textcircle)
     }
     return textcircle
 }
@@ -80,8 +76,6 @@ function renderAxes(newScale, Axis, asixX) {
   
   if (asixX) {
     var bottomAxis = d3.axisBottom(newScale);
-    console.log(bottomAxis)
-    console.log(Axis)
     Axis.transition()
       .duration(1000)
       .call(bottomAxis);
@@ -90,36 +84,51 @@ function renderAxes(newScale, Axis, asixX) {
   } else {
       console.log(`voy y axis:${Axis}`)
       var leftAxis = d3.axisLeft(newScale);
-      console.log(leftAxis)
       Axis.transition()
       .duration(1000)
       .call(leftAxis);
       yAxis = Axis
       return yAxis;
   }
-
 }
 
+function colorCircle(chosenXAxis){
+    
+    switch (chosenXAxis) {
+        case "poverty":
+            color = "#222211"
+            break;
+        case "age":
+            color = "#664033"
+            break;
+        case "income":
+            color = "#334d66"
+            break;
+        default:
+            break;
+    }
+    return color
+}
+var colorCir = "#222211"
 // function used for updating circles group with a transition to
 // new circles
 function renderCircles(circlesGroup, newScale, chosenXAxis, axisX) {
     if (axisX) {
+        var color = colorCircle(chosenXAxis) // change color circle
         circlesGroup.transition()
         .duration(1000)
-        .attr("cx", d => newScale(d[chosenXAxis]));
+        .attr("cx", d => newScale(d[chosenXAxis]))
+        .attr("fill", color)
 
-  return circlesGroup;
+        return circlesGroup;
     } else {
         circlesGroup.transition()
         .duration(1000)
         .attr("cy", d => newScale(d[chosenYAxis]));
         console.log(chosenYAxis)
-
-  return circlesGroup;
+        return circlesGroup;
     }
-  
 }
-
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenAxis, circlesGroup, axisX) {
 
@@ -197,7 +206,7 @@ color = "#222211, 334d00"
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 18)
-    .attr("fill", "#33331a")
+    .attr("fill", "#222221")
     .attr("opacity", ".7");
     
     var textcircle = chartGroup.append("g")
@@ -210,7 +219,7 @@ color = "#222211, 334d00"
         .attr("y", d => yLinearScale(d[chosenYAxis]))
         .classed("text2", true)
         .attr("text-anchor", "middle")
-        .attr("fill", "black")
+        .attr("fill", "white")
         .attr("font-size", "12px")
         .style("font-weight", "bold")
         .attr("alignment-baseline", "central")
@@ -224,33 +233,52 @@ color = "#222211, 334d00"
     .attr("y", 20)
     .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
-    .text("Poverty (%)");
+    .text("In Poverty (%)");
 
-  var ageLabel = labelsGroup.append("text")
+    var ageLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
     .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (Median)");
 
+    var HouseincomeLabel = labelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 60)
+    .attr("value", "income") // value to grab for event listener
+    .classed("inactive", true)
+    .text("Household Income (Median)");
+
   // append y axis
-    chartGroup.append("text")
+      var obesityLabel = chartGroup.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
-        .attr("value", "healthcare")
+        .attr("value", "obesity")
+        .classed("inactive", true)
         //.classed("axis-text", true)
-        .text("Lacks Healthcare (%)");
+        .text("Obese (%)");
 
-    chartGroup.append("text")
+    var smokesLabel = chartGroup.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 20 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .attr("value", "smokes")
+        .classed("inactive", true)
         //.classed("axis-text", true)
-        .text("Luis of Billboard 500 Hits");
+        .text("Smokes (%)");
+        
+        var healthcareLabel = chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 40 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .attr("value", "healthcare")
+        .classed("active", true)
+        //.classed("axis-text", true)
+        .text("Lacks Healthcare (%)");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, circlesGroup, true); // first time poverty vs healthcare tooltips
@@ -265,13 +293,51 @@ color = "#222211, 334d00"
         // replaces chosenXAxis with value
         chosenYAxis = value;
     }
-    console.log(`esto leo${chosenYAxis}`)
+    console.log(`esto leo: ${chosenYAxis}`)
     yLinearScale = yScale(St_Data, chosenYAxis);
     yAxis = renderAxes(yLinearScale, yAxis, false);
     circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis, false);
     // updates tooltips with new info
     circlesGroup = updateToolTip(chosenYAxis, circlesGroup, false); // if false y-axis
     textcircle = Updatetextcircle(textcircle, chosenYAxis, yLinearScale, false)
+    switch (chosenYAxis) {
+        case ("healthcare"):
+            healthcareLabel
+            .classed("active", true)
+            .classed("inactive", false);
+            obesityLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            smokesLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            break;
+        case ("obesity"):
+            healthcareLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            obesityLabel
+            .classed("active", true)
+            .classed("inactive", false);
+            smokesLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            break;
+        case ("smokes"):
+            healthcareLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            obesityLabel
+            .classed("active", false)
+            .classed("inactive", true);
+            smokesLabel
+            .classed("active", true)
+            .classed("inactive", false);
+            break;
+        default:
+            break;
+    }
+
   })
   // x axis labels event listener
   labelsGroup.selectAll("text")
@@ -299,24 +365,46 @@ color = "#222211, 334d00"
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup, true); // if true x-axis
         textcircle = Updatetextcircle(textcircle, chosenXAxis, xLinearScale, true)
 
-
         // changes classes to change bold text
-        if (chosenXAxis === "age") {
-          ageLabel
-            .classed("active", true)
-            .classed("inactive", false);
-            povertyLabel
-            .classed("active", false)
-            .classed("inactive", true);
+        switch (chosenXAxis) {
+            case ("age"):
+                ageLabel
+                .classed("active", true)
+                .classed("inactive", false);
+                povertyLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                HouseincomeLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                break;
+            case ("poverty"):
+                ageLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                povertyLabel
+                .classed("active", true)
+                .classed("inactive", false);
+                HouseincomeLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                break;
+            case ("income"):
+                ageLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                povertyLabel
+                .classed("active", false)
+                .classed("inactive", true);
+                HouseincomeLabel
+                .classed("active", true)
+                .classed("inactive", false);
+                break;
+            default:
+                break;
         }
-        else {
-          ageLabel
-            .classed("active", false)
-            .classed("inactive", true);
-            povertyLabel
-            .classed("active", true)
-            .classed("inactive", false);
-        }
+        
+        
       }
     });
 }).catch(function(error) {
