@@ -126,7 +126,6 @@ function colorCircle(chosenXAxis){
     }
     return color
 }
-var colorCir = "#222211"
 // function used for updating circles group with a transition to
 // new circles
 function renderCircles(circlesGroup, newScale, chosenXAxis, axisX) {
