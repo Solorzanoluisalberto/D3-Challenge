@@ -1,11 +1,28 @@
-var svgWidth = 960;
-var svgHeight = 500;
+d3.select(window).on("resize", handleResize);
+
+// When the browser loads, loadChart() is called
+loadChart();
+
+function handleResize() {
+  var svgArea = d3.select("svg");
+
+  // If there is already an svg container on the page, remove it and reload the chart
+  if (!svgArea.empty()) {
+    svgArea.remove();
+    loadChart();
+  }
+}
+
+function loadChart() {
+    
+    var svgWidth = window.innerWidth-80; //var svgWidth = 960;
+    var svgHeight = window.innerHeight; //var svgHeight = 500;
 
 var margin = {
   top: 20,
-  right: 40,
-  bottom: 80,
-  left: 100
+  right: 80,
+  bottom: 85,
+  left: 90
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -50,8 +67,8 @@ function Updatetextcircle(textcircle, chosenAxis, LinearScale, axisX ) {
 function xScale(St_Data, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(St_Data, d => d[chosenXAxis])* .95,
-      d3.max(St_Data, d => d[chosenXAxis])* 1.1
+    .domain([d3.min(St_Data, d => d[chosenXAxis])*.95,
+      d3.max(St_Data, d => d[chosenXAxis])
     ])
     .range([0, width])
     .nice();
@@ -62,8 +79,8 @@ function xScale(St_Data, chosenXAxis) {
 function yScale(St_Data, chosenYAxis) {
     // create Y scales
     var yLinearScale = d3.scaleLinear()
-   .domain([0, d3.max(St_Data, d => d[chosenYAxis])* 1.1])
-   .range([height, 0])
+   .domain([d3.min(St_Data, d => d[chosenYAxis])* .85, d3.max(St_Data, d => d[chosenYAxis])* 1.1])
+   .range([height, d3.min(St_Data, d => d[chosenYAxis])* .8])
    .nice();
   
     return yLinearScale;
@@ -205,7 +222,7 @@ color = "#222211, 334d00"
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 18)
+    .attr("r", 16)
     .attr("fill", "#222221")
     .attr("opacity", ".7");
     
@@ -219,8 +236,8 @@ color = "#222211, 334d00"
         .attr("y", d => yLinearScale(d[chosenYAxis]))
         .classed("text2", true)
         .attr("text-anchor", "middle")
-        .attr("fill", "white")
-        .attr("font-size", "12px")
+        .attr("fill", "#f2f2f2")
+        .attr("font-size", "10px")
         .style("font-weight", "bold")
         .attr("alignment-baseline", "central")
 
@@ -411,5 +428,5 @@ color = "#222211, 334d00"
   console.log(error);
 });
 
-console.log("1");
-
+console.log("123");
+}
